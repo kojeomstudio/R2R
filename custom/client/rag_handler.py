@@ -3,7 +3,7 @@ import json
 from r2r import R2RClient
 from utils import get_config_path
 
-def send_query(query):
+def send_query(query, mode : str = "rag"):
     config_path = get_config_path("config.json")
     with open(config_path, 'r', encoding='utf-8') as f:
         config = json.load(f)
@@ -14,10 +14,20 @@ def send_query(query):
         rag_generation_config=config["rag_generation_config"]
     )
 
-    try:
-        return response['results']['generated_answer']
-    except TypeError:
-        return response.results.generated_answer
+    result_string = ""
+
+    if mode == "rag":
+        try:
+            result_string =  response['results']['generated_answer']
+        except TypeError:
+            result_string = response.results.generated_answer
+    elif mode == "agent":
+        try:
+            result_string = response['results']['messages']
+        except TypeError:
+            result_string = response.results.agent_answer
+    
+    return result_string
 
 
 

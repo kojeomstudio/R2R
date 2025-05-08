@@ -69,8 +69,6 @@ __all__ = [
     "AgentConfig",
     "Conversation",
     "Message",
-    "Tool",
-    "ToolResult",
     ## API
     # Auth Responses
     "TokenResponse",
@@ -89,18 +87,21 @@ __all__ = [
     # Crypto provider
     "CryptoConfig",
     "CryptoProvider",
-    # Email provider
-    "EmailConfig",
-    "EmailProvider",
     # Database providers
     "LimitSettings",
     "DatabaseConfig",
     "DatabaseProvider",
     "Handler",
     "PostgresConfigurationSettings",
+    # Email provider
+    "EmailConfig",
+    "EmailProvider",
     # Embedding provider
     "EmbeddingConfig",
     "EmbeddingProvider",
+    # File provider
+    "FileConfig",
+    "FileProvider",
     # Ingestion provider
     "IngestionConfig",
     "IngestionProvider",

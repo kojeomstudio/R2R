@@ -85,9 +85,6 @@ class DocumentType(str, Enum):
     DOC = "doc"
     DOCX = "docx"
 
-    # XML
-    XML = "xml"
-
     # Code
     PY = "py"
     JS = "js"
@@ -197,7 +194,7 @@ class DocumentResponse(R2RSerializable):
     updated_at: Optional[datetime] = None
     ingestion_attempt_number: Optional[int] = None
     summary: Optional[str] = None
-    summary_embedding: Optional[list[float]] = None  # Add optional embedding
+    summary_embedding: Optional[list[float]] = None
     total_tokens: Optional[int] = None
     chunks: Optional[list] = None
 

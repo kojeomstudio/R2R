@@ -14,6 +14,7 @@ from .document import (
 from .exception import (
     PDFParsingError,
     PopplerNotFoundError,
+    R2RClientException,
     R2RDocumentProcessingError,
     R2RException,
 )
@@ -52,6 +53,7 @@ from .search import (
     WebPageSearchResult,
     select_search_filters,
 )
+from .tool import Tool, ToolResult
 from .user import Token, TokenData, User
 from .vector import (
     IndexArgsHNSW,
@@ -87,6 +89,7 @@ __all__ = [
     # Exception abstractions
     "R2RDocumentProcessingError",
     "R2RException",
+    "R2RClientException",
     "PDFParsingError",
     "PopplerNotFoundError",
     # Graph abstractions
@@ -124,6 +127,9 @@ __all__ = [
     "GraphEnrichmentSettings",
     "GraphExtraction",
     "GraphCommunitySettings",
+    # Tool abstractions
+    "Tool",
+    "ToolResult",
     # User abstractions
     "Token",
     "TokenData",

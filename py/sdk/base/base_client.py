@@ -10,13 +10,14 @@ class BaseClient:
         timeout: float = 300.0,
     ):
         self.base_url = base_url or os.getenv(
-            "R2R_API_BASE", "https://api.sciphi.ai"
+            "R2R_API_BASE", "http://localhost:7272"
         )
         self.timeout = timeout
         self.access_token: str | None = None
         self._refresh_token: str | None = None
         self._user_id: str | None = None
         self.api_key: str | None = os.getenv("R2R_API_KEY", None)
+        self.project_name: str | None = None
 
     def _get_auth_header(self) -> dict[str, str]:
         if self.access_token and self.api_key:
@@ -41,6 +42,10 @@ class BaseClient:
             "verify_email",
         ]:
             headers.update(self._get_auth_header())
+
+        if self.project_name:
+            headers["x-project-name"] = self.project_name
+
         if (
             kwargs.get("params", None) == {}
             or kwargs.get("params", None) is None

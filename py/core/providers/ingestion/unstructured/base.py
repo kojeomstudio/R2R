@@ -1,4 +1,3 @@
-# TODO - cleanup type issues in this file that relate to `bytes`
 import asyncio
 import base64
 import logging
@@ -141,6 +140,7 @@ class UnstructuredIngestionProvider(IngestionProvider):
         ) = llm_provider
         self.ocr_provider: MistralOCRProvider = ocr_provider
 
+        self.client: UnstructuredClient | httpx.AsyncClient
         if config.provider == "unstructured_api":
             try:
                 self.unstructured_api_auth = os.environ["UNSTRUCTURED_API_KEY"]
@@ -345,14 +345,14 @@ class UnstructuredIngestionProvider(IngestionProvider):
             logger.info(
                 f"Parsing {document.document_type}: {document.id} with unstructured"
             )
-            if isinstance(file_content, bytes):
-                file_content = BytesIO(file_content)  # type: ignore
+
+            file_io = BytesIO(file_content)
 
             # TODO - Include check on excluded parsers here.
             if self.config.provider == "unstructured_api":
                 logger.info(f"Using API to parse document {document.id}")
                 files = self.shared.Files(
-                    content=file_content.read(),  # type: ignore
+                    content=file_io.read(),
                     file_name=document.metadata.get("title", "unknown_file"),
                 )
 
@@ -360,12 +360,14 @@ class UnstructuredIngestionProvider(IngestionProvider):
                 ingestion_config.pop("extra_parsers", None)
 
                 req = self.operations.PartitionRequest(
-                    self.shared.PartitionParameters(
+                    partition_parameters=self.shared.PartitionParameters(
                         files=files,
                         **ingestion_config,
                     )
                 )
-                elements = self.client.general.partition(req)  # type: ignore
+                elements = await self.client.general.partition_async(  # type: ignore
+                    request=req
+                )
                 elements = list(elements.elements)  # type: ignore
 
             else:
@@ -373,7 +375,7 @@ class UnstructuredIngestionProvider(IngestionProvider):
                     f"Using local unstructured fastapi server to parse document {document.id}"
                 )
                 # Base64 encode the file content
-                encoded_content = base64.b64encode(file_content.read()).decode(  # type: ignore
+                encoded_content = base64.b64encode(file_io.read()).decode(
                     "utf-8"
                 )
 

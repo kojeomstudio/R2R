@@ -886,6 +886,7 @@ class IngestionServiceAdapter:
                 UnprocessedChunk.from_dict(chunk) for chunk in data["chunks"]
             ],
             "id": data.get("id"),
+            "collection_ids": data.get("collection_ids", []),
         }
 
     @staticmethod
@@ -897,17 +898,6 @@ class IngestionServiceAdapter:
             "text": data["text"],
             "metadata": data.get("metadata"),
             "collection_ids": data.get("collection_ids", []),
-        }
-
-    @staticmethod
-    def parse_update_files_input(data: dict) -> dict:
-        return {
-            "user": IngestionServiceAdapter._parse_user_data(data["user"]),
-            "document_ids": [UUID(doc_id) for doc_id in data["document_ids"]],
-            "metadatas": data["metadatas"],
-            "ingestion_config": data["ingestion_config"],
-            "file_sizes_in_bytes": data["file_sizes_in_bytes"],
-            "file_datas": data["file_datas"],
         }
 
     @staticmethod
